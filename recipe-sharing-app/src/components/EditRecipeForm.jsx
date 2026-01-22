@@ -7,8 +7,8 @@ const EditRecipeForm = ({ recipe }) => {
   const [description, setDescription] = useState(recipe.description);
   const [editing, setEditing] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault(); // ✅ prevents page reload
     updateRecipe({ id: recipe.id, title, description });
     setEditing(false);
   };
@@ -31,7 +31,9 @@ const EditRecipeForm = ({ recipe }) => {
         style={{ display: 'block', marginBottom: '5px', width: '300px', height: '100px', padding: '5px' }}
       />
       <button type="submit">Save</button>
-      <button type="button" onClick={() => setEditing(false)} style={{ marginLeft: '5px' }}>Cancel</button>
+      <button type="button" onClick={() => setEditing(false)} style={{ marginLeft: '5px' }}>
+        Cancel
+      </button>
     </form>
   );
 };
