@@ -1,7 +1,7 @@
-username, location, minRepos, 1);
+username, location, minRepos, 1;
 // ...
 const data = await fetchUserData(username, location, minRepos, nextPage);
-Updated Search.jsx snippet
+
 import { useState } from "react";
 import { fetchAdvancedUsers as fetchUserData } from "../services/githubService";
 
