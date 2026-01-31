@@ -44,48 +44,67 @@ export default function Search() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <form className="flex flex-col gap-3" onSubmit={handleSearch}>
+    <div className="max-w-5xl mx-auto p-6">
+      {/* Advanced Search Form */}
+      <form
+        className="flex flex-col md:flex-row gap-4 items-center mb-6"
+        onSubmit={handleSearch}
+      >
         <input
           type="text"
           placeholder="Username"
-          className="border p-2 rounded"
+          className="border p-2 rounded flex-1"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="text"
           placeholder="Location"
-          className="border p-2 rounded"
+          className="border p-2 rounded flex-1"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
         <input
           type="number"
           placeholder="Minimum Repos"
-          className="border p-2 rounded"
+          className="border p-2 rounded w-40"
           value={minRepos}
           onChange={(e) => setMinRepos(e.target.value)}
         />
-        <button className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600" type="submit">
+        <button
+          type="submit"
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 w-full md:w-auto"
+        >
           Search
         </button>
       </form>
 
-      {loading && <p className="mt-4">Loading...</p>}
-      {error && <p className="mt-4 text-red-500">{error}</p>}
+      {/* Loading & Error */}
+      {loading && <p className="text-center text-gray-500">Loading...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
+      {users.length === 0 && !loading && !error && (
+        <p className="text-center text-gray-400">No results yet. Try searching!</p>
+      )}
 
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Users Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => (
-          <div key={user.id} className="border p-4 rounded shadow hover:shadow-lg">
-            <img src={user.avatar_url} alt={user.login} className="w-20 h-20 rounded-full mx-auto" />
-            <h2 className="text-center font-bold mt-2">{user.login}</h2>
-            {user.location && <p className="text-center text-gray-600">{user.location}</p>}
-            <p className="text-center text-gray-500">Repos: {user.public_repos ?? "N/A"}</p>
+          <div
+            key={user.id}
+            className="border rounded shadow p-4 hover:shadow-lg flex flex-col items-center"
+          >
+            <img
+              src={user.avatar_url}
+              alt={user.login}
+              className="w-24 h-24 rounded-full mb-2"
+            />
+            <h2 className="font-bold text-lg">{user.name || user.login}</h2>
+            {user.location && <p className="text-gray-600">{user.location}</p>}
+            <p className="text-gray-500">Repos: {user.public_repos ?? "N/A"}</p>
             <a
               href={user.html_url}
               target="_blank"
-              className="block mt-2 text-center text-blue-500 hover:underline"
+              className="mt-2 text-blue-500 hover:underline"
             >
               View Profile
             </a>
@@ -93,10 +112,11 @@ export default function Search() {
         ))}
       </div>
 
+      {/* Load More Button */}
       {users.length < totalCount && !loading && (
         <button
           onClick={loadMore}
-          className="mt-4 bg-gray-200 p-2 rounded hover:bg-gray-300 block mx-auto"
+          className="mt-6 block mx-auto bg-gray-200 p-2 rounded hover:bg-gray-300"
         >
           Load More
         </button>
