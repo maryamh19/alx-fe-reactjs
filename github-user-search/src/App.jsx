@@ -1,20 +1,10 @@
-import { useState } from "react";
-import "./App.css";
+import Search from "./components/Search";
 
 function App() {
-  const [query, setQuery] = useState("");
-
   return (
-    <div className="app">
+    <div className="App">
       <h1>GitHub User Search</h1>
-      <p>Search for GitHub profiles using the GitHub API</p>
-
-      <input
-        type="text"
-        placeholder="Enter GitHub username..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      <Search />
     </div>
   );
 }
