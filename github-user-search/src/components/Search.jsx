@@ -1,5 +1,9 @@
+username, location, minRepos, 1);
+// ...
+const data = await fetchUserData(username, location, minRepos, nextPage);
+Updated Search.jsx snippet
 import { useState } from "react";
-import { fetchAdvancedUsers } from "../services/githubService";
+import { fetchAdvancedUsers as fetchUserData } from "../services/githubService";
 
 export default function Search() {
   const [username, setUsername] = useState("");
@@ -19,7 +23,7 @@ export default function Search() {
     setPage(1);
 
     try {
-      const data = await fetchAdvancedUsers(username, location, minRepos, 1);
+      const data = await fetchUserData(username, location, minRepos, 1);
       setUsers(data.items);
       setTotalCount(data.total_count);
     } catch (err) {
@@ -33,7 +37,7 @@ export default function Search() {
     const nextPage = page + 1;
     setLoading(true);
     try {
-      const data = await fetchAdvancedUsers(username, location, minRepos, nextPage);
+      const data = await fetchUserData(username, location, minRepos, nextPage);
       setUsers([...users, ...data.items]);
       setPage(nextPage);
     } catch (err) {
