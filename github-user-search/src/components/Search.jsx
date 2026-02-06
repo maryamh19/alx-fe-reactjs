@@ -20,10 +20,17 @@ export default function Search() {
 
     try {
       const data = await fetchUserData(username, location, minRepos, 1);
-      setUsers(data.items || []);
+
+      if (!data.items || data.items.length === 0) {
+        setError("Looks like we cant find the user");
+        setUsers([]);
+        return;
+      }
+
+      setUsers(data.items);
       setTotalCount(data.total_count || 0);
     } catch (err) {
-      setError("No users found matching the criteria");
+      setError("Looks like we cant find the user");
     } finally {
       setLoading(false);
     }
@@ -35,10 +42,10 @@ export default function Search() {
 
     try {
       const data = await fetchUserData(username, location, minRepos, nextPage);
-      setUsers((prevUsers) => [...prevUsers, ...(data.items || [])]);
+      setUsers((prev) => [...prev, ...(data.items || [])]);
       setPage(nextPage);
     } catch (err) {
-      setError("Error loading more users");
+      setError("Looks like we cant find the user");
     } finally {
       setLoading(false);
     }
@@ -46,7 +53,6 @@ export default function Search() {
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      {/* Search Form */}
       <form
         onSubmit={handleSearch}
         className="flex flex-col md:flex-row gap-4 mb-6"
@@ -84,7 +90,6 @@ export default function Search() {
         </button>
       </form>
 
-      {/* Status Messages */}
       {loading && <p className="text-center text-gray-500">Loading...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
 
@@ -94,7 +99,6 @@ export default function Search() {
         </p>
       )}
 
-      {/* Results */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => (
           <div
@@ -132,7 +136,6 @@ export default function Search() {
         ))}
       </div>
 
-      {/* Load More */}
       {users.length < totalCount && !loading && (
         <button
           onClick={loadMore}
