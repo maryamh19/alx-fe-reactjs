@@ -1,9 +1,5 @@
-username, location, minRepos, 1;
-// ...
-const data = await fetchUserData(username, location, minRepos, nextPage);
-
 import { useState } from "react";
-import { fetchAdvancedUsers as fetchUserData } from "../services/githubService";
+import { fetchUserData } from "../services/githubService";
 
 export default function Search() {
   const [username, setUsername] = useState("");
@@ -24,8 +20,8 @@ export default function Search() {
 
     try {
       const data = await fetchUserData(username, location, minRepos, 1);
-      setUsers(data.items);
-      setTotalCount(data.total_count);
+      setUsers(data.items || []);
+      setTotalCount(data.total_count || 0);
     } catch (err) {
       setError("No users found matching the criteria");
     } finally {
@@ -36,9 +32,10 @@ export default function Search() {
   const loadMore = async () => {
     const nextPage = page + 1;
     setLoading(true);
+
     try {
       const data = await fetchUserData(username, location, minRepos, nextPage);
-      setUsers([...users, ...data.items]);
+      setUsers((prevUsers) => [...prevUsers, ...(data.items || [])]);
       setPage(nextPage);
     } catch (err) {
       setError("Error loading more users");
@@ -49,10 +46,10 @@ export default function Search() {
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      {/* Advanced Search Form */}
+      {/* Search Form */}
       <form
-        className="flex flex-col md:flex-row gap-4 items-center mb-6"
         onSubmit={handleSearch}
+        className="flex flex-col md:flex-row gap-4 mb-6"
       >
         <input
           type="text"
@@ -61,6 +58,7 @@ export default function Search() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
+
         <input
           type="text"
           placeholder="Location"
@@ -68,46 +66,64 @@ export default function Search() {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
+
         <input
           type="number"
           placeholder="Minimum Repos"
-          className="border p-2 rounded w-40"
+          className="border p-2 rounded w-full md:w-40"
           value={minRepos}
           onChange={(e) => setMinRepos(e.target.value)}
         />
+
         <button
           type="submit"
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 w-full md:w-auto"
+          disabled={loading}
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
         >
-          Search
+          {loading ? "Searching..." : "Search"}
         </button>
       </form>
 
-      {/* Loading & Error */}
+      {/* Status Messages */}
       {loading && <p className="text-center text-gray-500">Loading...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
-      {users.length === 0 && !loading && !error && (
-        <p className="text-center text-gray-400">No results yet. Try searching!</p>
+
+      {!loading && !error && users.length === 0 && (
+        <p className="text-center text-gray-400">
+          No results yet. Try searching!
+        </p>
       )}
 
-      {/* Users Grid */}
+      {/* Results */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => (
           <div
             key={user.id}
-            className="border rounded shadow p-4 hover:shadow-lg flex flex-col items-center"
+            className="border rounded shadow p-4 flex flex-col items-center"
           >
             <img
               src={user.avatar_url}
               alt={user.login}
+              loading="lazy"
               className="w-24 h-24 rounded-full mb-2"
             />
-            <h2 className="font-bold text-lg">{user.name || user.login}</h2>
-            {user.location && <p className="text-gray-600">{user.location}</p>}
-            <p className="text-gray-500">Repos: {user.public_repos ?? "N/A"}</p>
+
+            <h2 className="font-bold text-lg">
+              {user.name || user.login}
+            </h2>
+
+            {user.location && (
+              <p className="text-gray-600">{user.location}</p>
+            )}
+
+            <p className="text-gray-500">
+              Repos: {user.public_repos ?? "N/A"}
+            </p>
+
             <a
               href={user.html_url}
               target="_blank"
+              rel="noreferrer"
               className="mt-2 text-blue-500 hover:underline"
             >
               View Profile
@@ -116,7 +132,7 @@ export default function Search() {
         ))}
       </div>
 
-      {/* Load More Button */}
+      {/* Load More */}
       {users.length < totalCount && !loading && (
         <button
           onClick={loadMore}
