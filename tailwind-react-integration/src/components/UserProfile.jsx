@@ -1,20 +1,57 @@
-Task Description:
-This task involves adding sophisticated visual feedback and dynamic effects to the UserProfile component using Tailwind CSS’s built-in utilities for transitions and animations. You’ll make the component more interactive and visually appealing.
+function UserProfile() {
+  return (
+    <div
+      className="
+        bg-gray-100
+        p-4 md:p-8
+        max-w-xs md:max-w-sm
+        mx-auto my-20
+        rounded-lg
+        shadow-lg
+        hover:shadow-xl
+        transition-shadow
+        duration-300
+      "
+    >
+      <img
+        src="https://via.placeholder.com/150"
+        alt="User"
+        className="
+          rounded-full
+          w-24 h-24 md:w-36 md:h-36
+          mx-auto
+          transition-transform
+          duration-300
+          ease-in-out
+          hover:scale-110
+        "
+      />
 
-Instructions for Adding Interactivity:
-Hover Effects:
+      <h1
+        className="
+          text-lg md:text-xl
+          text-blue-800
+          my-4
+          text-center
+          hover:text-blue-500
+          transition-colors
+          duration-300
+        "
+      >
+        John Doe
+      </h1>
 
-Apply a hover effect to the profile image to change its scale slightly, giving a sense of interaction when the user points at it.
-Example modifications:
-Add hover:scale-110 to the image to make it grow slightly on hover.
-Include a transition utility to make the scale change smooth (transition-transform duration-300 ease-in-out).
-Text Emphasis on Hover:
+      <p
+        className="
+          text-sm md:text-base
+          text-gray-600
+          text-center
+        "
+      >
+        Developer at Example Co. Loves to write code and explore new technologies.
+      </p>
+    </div>
+  );
+}
 
-Add a hover effect to the heading so that it changes color when hovered over to indicate it’s an interactive element.
-Example modifications:
-Change the text color to a lighter shade of blue on hover (hover:text-blue-500).
-Enhanced Shadows on Card Hover:
-
-Increase the shadow of the entire card when the mouse hovers over it to create a lifting effect.
-Example modifications:
-Use hover:shadow-xl on the container to enhance the shadow during hover.
+export default UserProfile;
