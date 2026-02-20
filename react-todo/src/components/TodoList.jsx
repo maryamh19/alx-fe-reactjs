@@ -5,17 +5,12 @@ function TodoList() {
   const [todos, setTodos] = useState([
     { id: 1, text: "Learn React", completed: false },
     { id: 2, text: "Write Tests", completed: false },
-    { id: 3, text: "Build Project", completed: false },
   ]);
 
   const addTodo = (text) => {
     setTodos([
       ...todos,
-      {
-        id: Date.now(),
-        text,
-        completed: false,
-      },
+      { id: Date.now(), text, completed: false },
     ]);
   };
 
@@ -35,20 +30,22 @@ function TodoList() {
 
   return (
     <div>
-      <h2>Todo List</h2>
+      <h1>Todo List</h1>
 
-      <AddTodoForm onAdd={addTodo} />
+      <AddTodoForm addTodo={addTodo} />
 
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>
             <span
+              data-testid={`todo-${todo.id}`}
               onClick={() => toggleTodo(todo.id)}
               style={{
-                textDecoration: todo.completed ? "line-through" : "none",
+                textDecoration: todo.completed
+                  ? "line-through"
+                  : "none",
                 cursor: "pointer",
               }}
-              data-testid={`todo-${todo.id}`}
             >
               {todo.text}
             </span>
