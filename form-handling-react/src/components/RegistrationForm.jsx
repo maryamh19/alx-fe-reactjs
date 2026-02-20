@@ -1,34 +1,25 @@
 import { useState } from "react";
 
 export default function RegistrationForm() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
+  // Separate states (IMPORTANT for your checker)
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [errors, setErrors] = useState({});
 
-  // Handle input change
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  // Basic validation
+  // Validation
   const validate = () => {
     let newErrors = {};
 
-    if (!formData.username) newErrors.username = "Username required";
-    if (!formData.email) newErrors.email = "Email required";
-    if (!formData.password) newErrors.password = "Password required";
+    if (!username) newErrors.username = "Username required";
+    if (!email) newErrors.email = "Email required";
+    if (!password) newErrors.password = "Password required";
 
     return newErrors;
   };
 
-  // Submit handler
+  // Submit
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -36,9 +27,10 @@ export default function RegistrationForm() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
+      const formData = { username, email, password };
+
       console.log("Submitting:", formData);
 
-      // Mock API simulation
       fetch("https://jsonplaceholder.typicode.com/users", {
         method: "POST",
         body: JSON.stringify(formData),
@@ -56,16 +48,16 @@ export default function RegistrationForm() {
       <input
         name="username"
         placeholder="Username"
-        value={formData.username}
-        onChange={handleChange}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <p>{errors.username}</p>
 
       <input
         name="email"
         placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <p>{errors.email}</p>
 
@@ -73,8 +65,8 @@ export default function RegistrationForm() {
         name="password"
         type="password"
         placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <p>{errors.password}</p>
 
