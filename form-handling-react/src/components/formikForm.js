@@ -1,76 +1,53 @@
-import { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-export default function RegistrationForm() {
-  // Separate states (IMPORTANT for your checker)
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [errors, setErrors] = useState({});
-
-  // Validation
-  const validate = () => {
-    let newErrors = {};
-
-    if (!username) newErrors.username = "Username required";
-    if (!email) newErrors.email = "Email required";
-    if (!password) newErrors.password = "Password required";
-
-    return newErrors;
-  };
-
-  // Submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const validationErrors = validate();
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length === 0) {
-      const formData = { username, email, password };
-
-      console.log("Submitting:", formData);
-
-      fetch("https://jsonplaceholder.typicode.com/users", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: { "Content-Type": "application/json" },
-      })
-        .then((res) => res.json())
-        .then((data) => console.log("API Response:", data));
-    }
-  };
+export default function FormikForm() {
+  // Validation Schema
+  const validationSchema = Yup.object({
+    username: Yup.string().required("Username required"),
+    email: Yup.string().email("Invalid email").required("Email required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 chars")
+      .required("Password required"),
+  });
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Register (Controlled)</h2>
+    <Formik
+      initialValues={{
+        username: "",
+        email: "",
+        password: "",
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(values, { resetForm }) => {
+        console.log("Submitting:", values);
 
-      <input
-        name="username"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <p>{errors.username}</p>
+        fetch("https://jsonplaceholder.typicode.com/users", {
+          method: "POST",
+          body: JSON.stringify(values),
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("API Response:", data);
+            resetForm();
+          });
+      }}
+    >
+      <Form>
+        <h2>Register (Formik)</h2>
 
-      <input
-        name="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <p>{errors.email}</p>
+        <Field name="username" placeholder="Username" />
+        <ErrorMessage name="username" component="p" />
 
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <p>{errors.password}</p>
+        <Field name="email" placeholder="Email" />
+        <ErrorMessage name="email" component="p" />
 
-      <button type="submit">Register</button>
-    </form>
+        <Field name="password" type="password" placeholder="Password" />
+        <ErrorMessage name="password" component="p" />
+
+        <button type="submit">Register</button>
+      </Form>
+    </Formik>
   );
 }
