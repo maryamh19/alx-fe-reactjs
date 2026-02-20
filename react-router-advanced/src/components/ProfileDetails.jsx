@@ -1,3 +1,3 @@
 export default function ProfileDetails() {
-  return <h3>Profile Details Section</h3>;
+  return <h3>Profile Details</h3>;
 }
