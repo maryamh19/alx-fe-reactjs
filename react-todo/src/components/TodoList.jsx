@@ -10,11 +10,7 @@ const TodoList = () => {
   const addTodo = (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
-    const newTodo = {
-      id: Date.now(),
-      text: inputValue,
-      completed: false
-    };
+    const newTodo = { id: Date.now(), text: inputValue, completed: false };
     setTodos([...todos, newTodo]);
     setInputValue('');
   };
@@ -43,14 +39,10 @@ const TodoList = () => {
       </form>
       <ul>
         {todos.map(todo => (
-          <li key={todo.id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <li key={todo.id}>
             <span 
               onClick={() => toggleTodo(todo.id)}
-              style={{ 
-                textDecoration: todo.completed ? 'line-through' : 'none',
-                cursor: 'pointer'
-              }}
-              data-testid={`todo-text-${todo.id}`}
+              style={{ textDecoration: todo.completed ? 'line-through' : 'none', cursor: 'pointer' }}
             >
               {todo.text}
             </span>
