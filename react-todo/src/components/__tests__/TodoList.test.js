@@ -4,21 +4,24 @@ import '@testing-library/jest-dom';
 import TodoList from '../components/TodoList';
 
 describe('TodoList Component', () => {
+  // Test Initial Render
   test('renders TodoList and initial tasks', () => {
     render(<TodoList />);
     expect(screen.getByText(/Learn React/i)).toBeInTheDocument();
     expect(screen.getByText(/Build a Todo App/i)).toBeInTheDocument();
   });
 
+  // Test Adding Todos
   test('adds a new todo item', () => {
     render(<TodoList />);
     const input = screen.getByPlaceholderText(/Add a new todo/i);
     const addButton = screen.getByText(/Add Todo/i);
-    fireEvent.change(input, { target: { value: 'New Task' } });
+    fireEvent.change(input, { target: { value: 'Master Testing' } });
     fireEvent.click(addButton);
-    expect(screen.getByText(/New Task/i)).toBeInTheDocument();
+    expect(screen.getByText(/Master Testing/i)).toBeInTheDocument();
   });
 
+  // Test Toggling Todos
   test('toggles todo completion status', () => {
     render(<TodoList />);
     const todoItem = screen.getByText(/Learn React/i);
@@ -28,6 +31,7 @@ describe('TodoList Component', () => {
     expect(todoItem).not.toHaveStyle('text-decoration: line-through');
   });
 
+  // Test Deleting Todos
   test('deletes a todo item', () => {
     render(<TodoList />);
     const todoItem = screen.getByText(/Learn React/i);
